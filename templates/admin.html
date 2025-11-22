@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/templates/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-table="users">Users</div>
+            <div class="tab" data-table="caregivers">Caregivers</div>
+            <div class="tab" data-table="members">Members</div>
+            <div class="tab" data-table="addresses">Addresses</div>
+            <div class="tab" data-table="jobs">Jobs</div>
+            <div class="tab" data-table="job-applications">Job Applications</div>
+            <div class="tab" data-table="appointments">Appointments</div>
+            <div class="tab tab-info" onclick="window.open('/docs', '_blank')">Swagger</div>
+            <div class="tab tab-info" onclick="window.open('/readme', '_blank')">README</div>
+        </div>
+
+        <div class="content-area">
+            <div class="table-header">
+                <h2 id="table-title">Users</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-create" onclick="openCreateModal()">Create</button>
+                    <button class="btn btn-update" onclick="openUpdateModal()">Update</button>
+                    <button class="btn btn-delete" onclick="deleteSelected()">Delete</button>
+                </div>
+            </div>
+            <div id="message"></div>
+            <div id="table-container">
+                <table id="data-table">
+                    <thead id="table-head"></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Create</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="data-form">
+                <div id="form-fields"></div>
+                <button type="submit" class="btn-submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/templates/js/config.js"></script>
+    <script src="/templates/js/api.js"></script>
+    <script src="/templates/js/ui.js"></script>
+    <script src="/templates/js/main.js"></script>
+</body>
+</html>

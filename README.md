@@ -1,12 +1,46 @@
 # Caregiver Management API
 
+## Description
+
+CSCI 341 Database Assignment 3 part #3, made by Pavel Kokoshko. 
+Team: Anuar Akimbekov, Pavel Kokoshko.
+
+Stack: SQLAlchemy, FastAPI, uvicorn, pytest.
+
+Database schema: `database_app.sql` creates the database. Models are 1:1 copies of database tables.
+
+Structure:
+```
+app/
+  models/ - SQLAlchemy ORM models
+  routers/ - API endpoints
+  schemas/ - validation schemas
+templates/
+  admin.html - main HTML
+  css/ - static styles
+  js/ - js module
+tests/ - pytest 
+static/ - Static files (caregiver photos only)
+database_app.sql - database init. script
+```
+
+Several notes:
+- I have deployed this to my personal server, w/o SSL as I have no free domen rn, maybe it may cause problems, but I hope no:)
+- Caregiver photos:
+  - saved in `/static` on server
+  - Photo not retrieved automatically upon request for caregiver
+  - in database only names are saved, but web-api has:
+  - separate endpoints for update (`PUT /caregivers/{id}/photo`) and get (`GET /caregivers/{id}/photo`)
+
 ## Run app:
 
 ```bash
 docker-compose --profile app up --build
 ```
 
-Available at: http://localhost:8000 - swagger UI
+Available at: 
+1. http://localhost:8000 - admin panel
+2. http://localhost:8000/docs - swagger 
 
 ## Run tests
 
@@ -20,20 +54,3 @@ docker-compose --profile test up --build
 docker-compose --profile app down
 ```
 
-## Description
-
-Stack: SQLAlchemy, FastAPI, uvicorn, pytest.
-
-Database schema: `database_app.sql` creates the database. Models are 1:1 copies of database tables.
-
-Structure:
-```
-app/
-  models/ - SQLAlchemy ORM models
-  routers/ - API endpoints
-  schemas/ - Pydantic validation schemas
-tests/ - pytest tests
-database_app.sql - database initialization script
-```
-
-NOTE: Caregiver photos: saved in `/static`, separate endpoints for upload (`PUT /caregivers/{id}/photo`) and get (`GET /caregivers/{id}/photo`). 
