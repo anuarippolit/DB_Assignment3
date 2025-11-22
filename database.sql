@@ -21,7 +21,7 @@ CREATE TABLE CAREGIVER (
     caregiver_user_id INTEGER PRIMARY KEY REFERENCES "USER"(user_id) ON DELETE CASCADE,
     photo TEXT NOT NULL,
     gender TEXT NOT NULL,
-    caregiving_type TEXT NOT NULL CHECK (caregiving_type IN ('babysitter', 'elderly care', 'playmate for children')),
+    caregiving_type TEXT NOT NULL CHECK (caregiving_type IN ('babysitter', 'elderly_care', 'playmate_for_children')),
     hourly_rate DECIMAL(6, 2) NOT NULL CHECK (hourly_rate >= 0)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE ADDRESS (
 CREATE TABLE JOB (
     job_id INTEGER PRIMARY KEY,
     member_user_id INTEGER NOT NULL REFERENCES MEMBER(member_user_id) ON DELETE CASCADE,
-    required_caregiving_type TEXT NOT NULL CHECK (required_caregiving_type IN ('babysitter', 'elderly care', 'playmate for children')),
+    required_caregiving_type TEXT NOT NULL CHECK (required_caregiving_type IN ('babysitter', 'elderly_care', 'playmate_for_children')),
     other_requirements TEXT,
     date_posted DATE NOT NULL
 );
@@ -89,16 +89,16 @@ INSERT INTO "USER" (user_id, email, given_name, surname, city, phone_number, pro
 (22, 'amina.aminova@gmail.com', 'Amina', 'Aminova', 'Almaty', '+7707 987 12 34', 'Member profile', 'password123');
 
 INSERT INTO CAREGIVER (caregiver_user_id, photo, gender, caregiving_type, hourly_rate) VALUES
-(1, 'photo1.jpg', 'Male', 'elderly care', 1500.00),
+(1, 'photo1.jpg', 'Male', 'elderly_care', 1500.00),
 (2, 'photo2.jpg', 'Male', 'babysitter', 1200.00),
-(3, 'photo3.jpg', 'Female', 'playmate for children', 1000.00),
-(4, 'photo4.jpg', 'Male', 'elderly care', 1800.00),
+(3, 'photo3.jpg', 'Female', 'playmate_for_children', 1000.00),
+(4, 'photo4.jpg', 'Male', 'elderly_care', 1800.00),
 (5, 'photo5.jpg', 'Male', 'babysitter', 1100.00),
-(6, 'photo6.jpg', 'Female', 'elderly care', 1600.00),
-(7, 'photo7.jpg', 'Female', 'elderly care', 2000.00),
-(8, 'photo8.jpg', 'Female', 'elderly care', 1700.00),
-(9, 'photo9.jpg', 'Female', 'elderly care', 2100.00),
-(10, 'photo10.jpg', 'Female', 'elderly care', 2200.00),
+(6, 'photo6.jpg', 'Female', 'elderly_care', 1600.00),
+(7, 'photo7.jpg', 'Female', 'elderly_care', 2000.00),
+(8, 'photo8.jpg', 'Female', 'elderly_care', 1700.00),
+(9, 'photo9.jpg', 'Female', 'elderly_care', 2100.00),
+(10, 'photo10.jpg', 'Female', 'elderly_care', 2200.00),
 (11, 'photo11.jpg', 'Male', 'babysitter', 3800.00);
 
 INSERT INTO MEMBER (member_user_id, house_rules, dependent_description) VALUES
@@ -128,21 +128,21 @@ INSERT INTO ADDRESS (member_user_id, house_number, street, town) VALUES
 (22, '55', 'Al-Farabi Avenue', 'Almaty');
 
 INSERT INTO JOB (job_id, member_user_id, required_caregiving_type, other_requirements, date_posted) VALUES
-(1, 13, 'elderly care', 'Must be soft-spoken and patient. Certification required.', '2025-01-15'),
+(1, 13, 'elderly_care', 'Must be soft-spoken and patient. Certification required.', '2025-01-15'),
 (2, 12, 'babysitter', 'Experience with arts and crafts preferred.', '2025-01-20'),
 (3, 14, 'babysitter', 'Must be reliable and punctual. CPR certified.', '2025-02-01'),
-(4, 16, 'elderly care', 'Looking for soft-spoken caregiver with experience in dementia care.', '2025-02-10'),
-(5, 15, 'playmate for children', 'Creative activities preferred. Weekend availability.', '2025-02-15'),
+(4, 16, 'elderly_care', 'Looking for soft-spoken caregiver with experience in dementia care.', '2025-02-10'),
+(5, 15, 'playmate_for_children', 'Creative activities preferred. Weekend availability.', '2025-02-15'),
 (6, 17, 'babysitter', 'Special needs experience required. Must be patient and soft-spoken.', '2025-02-20'),
-(7, 18, 'elderly care', 'Flexible schedule. Must be soft-spoken and understanding.', '2025-03-01'),
-(11, 20, 'elderly care', 'Homebound care. Must be soft-spoken and compassionate.', '2025-03-15'),
+(7, 18, 'elderly_care', 'Flexible schedule. Must be soft-spoken and understanding.', '2025-03-01'),
+(11, 20, 'elderly_care', 'Homebound care. Must be soft-spoken and compassionate.', '2025-03-15'),
 (12, 21, 'babysitter', 'Professional caregiver needed. Reliable schedule.', '2025-03-20'),
-(13, 13, 'elderly care', 'Part-time position. Soft-spoken personality required.', '2025-04-01'),
-(14, 16, 'elderly care', 'Full-time elderly care specialist needed.', '2025-04-05'),
-(15, 18, 'elderly care', 'Weekend availability. Must be gentle and soft-spoken.', '2025-04-10'),
-(16, 22, 'elderly care', 'Full-time position. Must be certified.', '2025-04-12'),
+(13, 13, 'elderly_care', 'Part-time position. Soft-spoken personality required.', '2025-04-01'),
+(14, 16, 'elderly_care', 'Full-time elderly care specialist needed.', '2025-04-05'),
+(15, 18, 'elderly_care', 'Weekend availability. Must be gentle and soft-spoken.', '2025-04-10'),
+(16, 22, 'elderly_care', 'Full-time position. Must be certified.', '2025-04-12'),
 (17, 22, 'babysitter', 'Part-time evening care needed.', '2025-04-15'),
-(18, 22, 'playmate for children', 'Weekend activities preferred.', '2025-04-18');
+(18, 22, 'playmate_for_children', 'Weekend activities preferred.', '2025-04-18');
 
 INSERT INTO JOB_APPLICATION (caregiver_user_id, job_id, date_applied) VALUES
 (1, 1, '2025-01-16'),

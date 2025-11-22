@@ -153,7 +153,7 @@ FROM "USER" u
 JOIN MEMBER m ON u.user_id = m.member_user_id
 JOIN JOB j ON m.member_user_id = j.member_user_id
 JOIN ADDRESS a ON m.member_user_id = a.member_user_id
-WHERE j.required_caregiving_type = 'elderly care'
+WHERE j.required_caregiving_type = 'elderly_care'
   AND u.city = 'Astana'
   AND m.house_rules LIKE '%No pets%';
 """
