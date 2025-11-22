@@ -19,7 +19,7 @@ CREATE TABLE "USER" (
 
 CREATE TABLE CAREGIVER (
     caregiver_user_id INTEGER PRIMARY KEY REFERENCES "USER"(user_id) ON DELETE CASCADE,
-    photo TEXT,
+    photo TEXT NOT NULL,
     gender TEXT NOT NULL,
     caregiving_type TEXT NOT NULL CHECK (caregiving_type IN ('babysitter', 'elderly care', 'playmate for children')),
     hourly_rate DECIMAL(6, 2) NOT NULL CHECK (hourly_rate >= 0)
@@ -68,24 +68,24 @@ INSERT INTO "USER" (user_id, email, given_name, surname, city, phone_number, pro
 (1, 'anuar.akimbekov@gmail.com', 'Anuar', 'Akimbekov', 'Astana', '+7707 111 11 11', 'Experienced caregiver with 5 years in elderly care', 'password123'),
 (2, 'pavel.kokoshko@nu.edu.kz', 'Pavel', 'Kokoshko', 'Almaty', '+7 707 222 22 22', 'Professional babysitter, certified in child care', 'password123'),
 (3, 'anna.kazakhstan@gmail.com', 'Anna', 'Kazakhstan', 'Astana', '+7707 333 33 33', 'Creative playmate, loves arts and crafts', 'password123'),
-(4, 'max.verstappen@gmail.com', 'Max', 'Verstappen', 'Shymkent', '+7707 444 44 44', 'Compassionate caregiver specializing in elderly care', 'password123'),
-(5, 'lewis.hamilton@nu.edu.kz', 'Lewis', 'Hamilton', 'Astana', '+7707 555 55 55', 'Reliable babysitter, I had early childhood education background', 'password123'),
+(4, 'max.verstappen@gmail.com', 'Max', 'Verstappen', 'Shymkent', '+7707 444 44 44', 'Tu-tu-tu-tu Max Verstappen', 'password123'),
+(5, 'lewis.hamilton@nu.edu.kz', 'Lewis', 'Hamilton', 'Astana', '+7707 555 55 55', 'It is hammer time', 'password123'),
 (6, 'zarina.nurmanova@mail.ru', 'Zarina', 'Nurmanova', 'Astana', '+7707 666 66 66', 'Experienced in both babysitting and elderly care', 'password123'),
 (7, 'dilnaz.serikova@nu.edu.kz', 'Dilnaz', 'Serikova', 'Astana', '+7707 777 77 77', 'Professional elderly care specialist', 'password123'),
 (8, 'aida.nurpeisova@gmail.com', 'Aida', 'Nurpeisova', 'Astana', '+7707 888 88 88', 'I am good caregiver', 'password123'),
 (9, 'madina.alimova@mail.ru', 'Madina', 'Alimova', 'Astana', '+7707 999 99 99', 'Specialist in dementia care', 'password123'),
 (10, 'ayana.zhaksybekova@nu.edu.kz', 'Ayana', 'Zhaksybekova', 'Astana', '+7707 123 45 67', 'Professional caregiver available weekends', 'password123'),
 (11, 'arman.armanov@nu.edu.kz', 'Arman', 'Armanov', 'Astana', '+7707 987 65 43', 'Caregiver profile', 'password123'),
-(12, 'ignat.ippolitovich@mail.ru', 'Ignat', 'Ippolitovich', 'Astana', '+7707 111 22 22', 'Father of two young children', 'password123'),
-(13, 'innokentiya.ippolitovich@gmail.com', 'Innokentiya', 'Ippolitovich', 'Almaty', '+7707 222 33 33', 'Looking for caregiver for elderly mother', 'password123'),
-(14, 'kondratiya.ippolitovich@nu.edu.kz', 'Kondratiya', 'Ippolitovich', 'Astana', '+7707 333 44 44', 'Single father, needs reliable childcare', 'password123'),
+(12, 'ignat.ippolitovich@mail.ru', 'Ignat', 'Ippolitovich', 'Astana', '+7707 111 22 22', 'Father of two young cats', 'password123'),
+(13, 'innokentiya.ippolitovich@gmail.com', 'Innokentiya', 'Ippolitovich', 'Almaty', '+7707 222 33 33', 'I am second cat child', 'password123'),
+(14, 'kondratiya.ippolitovich@nu.edu.kz', 'Kondratiya', 'Ippolitovich', 'Astana', '+7707 333 44 44', 'I am third cat child', 'password123'),
 (15, 'gulnara.gulimova@mail.ru', 'Gulnara', 'Gulimova', 'Astana', '+7707 444 55 55', 'Working mother needing weekend care', 'password123'),
 (16, 'aigerim.nurlanova@gmail.com', 'Aigerim', 'Nurlanova', 'Almaty', '+7707 555 66 66', 'Daughter caring for aging parent', 'password123'),
 (17, 'asel.mukhanova@nu.edu.kz', 'Asel', 'Mukhanova', 'Astana', '+7707 666 77 77', 'Mother of special needs child', 'password123'),
-(18, 'carlos.sainz@mail.ru', 'Carlos', 'Sainz', 'Astana', '+7707 777 88 88', 'Working professional, needs flexible care', 'password123'),
+(18, 'carlos.sainz@mail.ru', 'Carlos', 'Sainz', 'Astana', '+7707 777 88 88', 'Smooth operator', 'password123'),
 (19, 'roza.raimbaeva@gmail.com', 'Roza', 'Raimbaeva', 'Astana', '+7707 888 99 99', 'Grandmother watching grandchildren', 'password123'),
-(20, 'george.russel@nu.edu.kz', 'George', 'Russel', 'Astana', '+7707 999 11 11', 'Elderly care needed for homebound relative', 'password123'),
-(21, 'valtteri.bottas@mail.ru', 'Valtteri', 'Bottas', 'Astana', '+7707 123 98 76', 'Busy professional parent', 'password123'),
+(20, 'george.russel@nu.edu.kz', 'George', 'Russel', 'Astana', '+7707 999 11 11', 'Cry me a river', 'password123'),
+(21, 'valtteri.bottas@mail.ru', 'Valtteri', 'Bottas', 'Astana', '+7707 123 98 76', 'Box box box....do not mess my box', 'password123'),
 (22, 'amina.aminova@gmail.com', 'Amina', 'Aminova', 'Almaty', '+7707 987 12 34', 'Member profile', 'password123');
 
 INSERT INTO CAREGIVER (caregiver_user_id, photo, gender, caregiving_type, hourly_rate) VALUES
