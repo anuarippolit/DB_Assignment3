@@ -1,4 +1,5 @@
 import pytest
+
 from app.models.enums import CaregivingType, Gender
 from io import BytesIO
 
@@ -36,6 +37,7 @@ def test_create_caregiver(client):
     assert data["hourly_rate"] == 1500
 
 def test_get_caregiver(client):
+
     user_response = client.post(
         "/users/",
         data={
@@ -62,7 +64,9 @@ def test_get_caregiver(client):
     )
     
     response = client.get(f"/caregivers/{user_id}")
+
     assert response.status_code == 200
+
     data = response.json()
 
     assert data["caregiver_user_id"] == user_id
@@ -97,6 +101,7 @@ def test_update_caregiver(client):
     response = client.put(
         f"/caregivers/{user_id}?hourly_rate=2000"
     )
+
     assert response.status_code == 200
     data = response.json()
 
@@ -130,8 +135,10 @@ def test_delete_caregiver(client):
     )
     
     response = client.delete(f"/caregivers/{user_id}")
+
     assert response.status_code == 204
     
     get_response = client.get(f"/caregivers/{user_id}")
+    
     assert get_response.status_code == 404
 

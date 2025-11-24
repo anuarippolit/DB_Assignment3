@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, Query
 from sqlalchemy.orm import Session
+
 from typing import List, Optional
 from pydantic import EmailStr
 import re
+
 from app.models import User
 from app.schemas import UserCreate, UserUpdate, UserResponse
 from app.database import get_db
@@ -62,10 +64,10 @@ def create_user(
     #endregion validation 
 
     #user_id is auto-generated. 
-    max_user = db.query(User).order_by(User.user_id.desc()).first()
-    new_user_id = (max_user.user_id + 1) if max_user else 1
+    max_u = db.query(User).order_by(User.user_id.desc()).first()
+    new_user_id = (max_u.user_id + 1) if max_u else 1
     
-    db_user = User(
+    u = User(
         user_id=new_user_id,
         email=email,
         given_name=given_name,
@@ -76,29 +78,29 @@ def create_user(
         password=password
     )
 
-    db.add(db_user)
+    db.add(u)
     db.commit()
-    db.refresh(db_user)
+    db.refresh(u)
 
-    return db_user
+    return u
 #endregion create user
 
 #region get user
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.user_id == user_id).first()
+    u = db.query(User).filter(User.user_id == user_id).first()
 
-    if not user:
+    if not u:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return u
 #endregion get user
 
 #region get all users
 @router.get("/", response_model=List[UserResponse])
 def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = db.query(User).offset(skip).limit(limit).all()
+    u = db.query(User).offset(skip).limit(limit).all()
 
-    return users
+    return u
 #endregion get all users
 
 #region update user
@@ -114,48 +116,48 @@ def update_user(
     password: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
-    db_user = db.query(User).filter(User.user_id == user_id).first()
+    u = db.query(User).filter(User.user_id == user_id).first()
 
-    if not db_user:
+    if not u:
         raise HTTPException(status_code=404, detail="User not found")
     
     #region validation
-    if email is not None and email != db_user.email:
+    if email is not None and email != u.email:
         if db.query(User).filter(User.email == email).first():
             raise HTTPException(status_code=400, detail="Email already registered")
-        db_user.email = email
+        u.email = email
     
     if phone_number is not None:
         if not validate_phone(phone_number):
             raise HTTPException(status_code=400, detail="Invalid phone number format. Expected format: +77071111111 or 87071111111")
-        db_user.phone_number = phone_number
+        u.phone_number = phone_number
     #endregion validation
 
     if given_name is not None:
-        db_user.given_name = given_name
+        u.given_name = given_name
     if surname is not None:
-        db_user.surname = surname
+        u.surname = surname
     if city is not None:
-        db_user.city = city
+        u.city = city
     if profile_description is not None:
-        db_user.profile_description = profile_description
+        u.profile_description = profile_description
     if password is not None:
-        db_user.password = password
+        u.password = password
     
     db.commit()
-    db.refresh(db_user)
-    return db_user
+    db.refresh(u)
+    return u
 #endregion update user
 
 #region delete user
 @router.delete("/{user_id}", status_code=204)
 def delete_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.user_id == user_id).first()
+    u = db.query(User).filter(User.user_id == user_id).first()
 
-    if not db_user:
+    if not u:
         raise HTTPException(status_code=404, detail="User not found")
     
-    db.delete(db_user)
+    db.delete(u)
     db.commit()
 
     return None

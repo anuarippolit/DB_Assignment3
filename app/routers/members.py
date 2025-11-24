@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Form, Query
 from sqlalchemy.orm import Session
 
 from typing import List, Optional
+
 from app.models import Member, User
 from app.schemas import MemberCreate, MemberUpdate, MemberResponse
 from app.database import get_db
@@ -16,43 +17,43 @@ def create_member(
     dependent_description: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.user_id == member_user_id).first()
+    u = db.query(User).filter(User.user_id == member_user_id).first()
 
-    if not user:
+    if not u:
         raise HTTPException(status_code=404, detail=f"User with id {member_user_id} not found. Please create the user first.")
     
     if db.query(Member).filter(Member.member_user_id == member_user_id).first():
         raise HTTPException(status_code=400, detail="Member already exists")
     
-    db_member = Member(
+    m = Member(
         member_user_id=member_user_id,
         house_rules=house_rules,
         dependent_description=dependent_description
     )
-    db.add(db_member)
+    db.add(m)
     db.commit()
-    db.refresh(db_member)
-    return db_member
+    db.refresh(m)
+    return m
 #endregion create member
 
 #region get all members
 @router.get("/", response_model=List[MemberResponse])
 def get_members(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
-    members = db.query(Member).offset(skip).limit(limit).all()
-    return members
+    m = db.query(Member).offset(skip).limit(limit).all()
+    return m
 #endregion get all members
 
 #region get member
 @router.get("/{member_user_id}", response_model=MemberResponse)
 def get_member(member_user_id: int, db: Session = Depends(get_db)):
 
-    member = db.query(Member).filter(Member.member_user_id == member_user_id).first()
+    m = db.query(Member).filter(Member.member_user_id == member_user_id).first()
     
-    if not member:
+    if not m:
         raise HTTPException(status_code=404, detail="Member not found")
 
-    return member
+    return m
 #endregion get member
 
 #region update member
@@ -63,29 +64,29 @@ def update_member(
     dependent_description: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
-    db_member = db.query(Member).filter(Member.member_user_id == member_user_id).first()
+    m = db.query(Member).filter(Member.member_user_id == member_user_id).first()
     
-    if not db_member:
+    if not m:
         raise HTTPException(status_code=404, detail="Member not found")
     
     if house_rules is not None:
-        db_member.house_rules = house_rules
+        m.house_rules = house_rules
     if dependent_description is not None:
-        db_member.dependent_description = dependent_description
+        m.dependent_description = dependent_description
     
     db.commit()
-    db.refresh(db_member)
-    return db_member
+    db.refresh(m)
+    return m
 #endregion update member
 
 #region delete member
 @router.delete("/{member_user_id}", status_code=204)
 def delete_member(member_user_id: int, db: Session = Depends(get_db)):
-    db_member = db.query(Member).filter(Member.member_user_id == member_user_id).first()
-    if not db_member:
+    m = db.query(Member).filter(Member.member_user_id == member_user_id).first()
+    if not m:
         raise HTTPException(status_code=404, detail="Member not found")
     
-    db.delete(db_member)
+    db.delete(m)
     db.commit()
     return None
 #endregion delete member

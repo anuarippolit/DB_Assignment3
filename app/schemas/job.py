@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import date
+
 from app.models.enums import CaregivingType
 
 class JobBase(BaseModel):

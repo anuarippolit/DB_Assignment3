@@ -1,4 +1,5 @@
 def test_create_user(client):
+    
     response = client.post(
         "/users/",
         data={
@@ -10,10 +11,13 @@ def test_create_user(client):
             "password": "password123"
         }
     )
+
     assert response.status_code == 201
     data = response.json()
+
     assert data["email"] == "test@example.com"
     assert data["given_name"] == "Test"
+
     assert "user_id" in data
 
 def test_get_user(client):
@@ -28,11 +32,13 @@ def test_get_user(client):
             "password": "password123"
         }
     )
+
     user_id = create_response.json()["user_id"]
     
     response = client.get(f"/users/{user_id}")
     assert response.status_code == 200
     data = response.json()
+
     assert data["user_id"] == user_id
     assert data["email"] == "test2@example.com"
 
@@ -50,8 +56,11 @@ def test_get_users(client):
     )
     
     response = client.get("/users/")
+
     assert response.status_code == 200
+
     data = response.json()
+
     assert isinstance(data, list)
     assert len(data) > 0
 
@@ -73,8 +82,10 @@ def test_update_user(client):
         f"/users/{user_id}?given_name=Updated&city=Almaty"
     )
     assert response.status_code == 200
+
     data = response.json()
     assert data["given_name"] == "Updated"
+
     assert data["city"] == "Almaty"
 
 def test_delete_user(client):
