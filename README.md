@@ -1,11 +1,61 @@
+
+# Database Queries Documentation
+
+## Overview
+
+`database_queries.py` is a Python script for executing SQL queries against a PostgreSQL database. It's divided into two main parts:
+- **Part 1**: Initializes the database with schema and initial data
+- **Part 2**: Executes various SQL queries (UPDATE, DELETE, SELECT, VIEW operations)
+
+## Prerequisites
+
+1. **PostgreSQL** database running
+2. **Python 3** with required packages:
+   ```bash
+   pip install sqlalchemy psycopg2-binary python-dotenv
+   ```
+
+## Setup
+
+1. **Create `.env` file** (copy from `.env.example`):
+   ```env
+   DB_USER=postgres
+   DB_PASSWORD=your_password
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_NAME=caregivers_db
+   ```
+
+## Usage
+
+### Run Part 1 (Initialize Database)
+
+```bash
+python3 -c "from database_queries import part_1; part_1()"
+```
+
+This will:
+- Create all tables (USER, CAREGIVER, MEMBER, JOB, etc.)
+- Insert initial data from `database.sql`
+
+### Run Part 2 (Execute Queries)
+
+```bash
+python3 -c "from database_queries import part_2; part_2()"
+```
+
+This will:
+- Executes all SQL queries (UPDATE, DELETE, SELECT, VIEW)
+- Includes verification checks after UPDATE/DELETE operations
+- Automatically disposes database connection when done
+
 # Caregiver Management API
 
 ## Description
 
-CSCI 341 Database Assignment 3 part #3, made by Pavel Kokoshko. 
-Team: Anuar Akimbekov, Pavel Kokoshko.
+CSCI 341 Database Assignment 3 part #3
 
-Stack: SQLAlchemy, FastAPI, uvicorn, pytest.
+Stack: SQLAlchemy, FastAPI, uvicorn, pytest, Docker.
 
 Database schema: `database_app.sql` creates the database. Models are 1:1 copies of database tables.
 
@@ -54,6 +104,5 @@ docker-compose --profile test up --build
 ```bash
 docker-compose --profile app down
 ```
-
 ---
-Made by: Pavel Kokoshko
+Made by: Pavel Kokoshko (web-app), Anuar Akimbekov (queries, structure)
