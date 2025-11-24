@@ -63,9 +63,11 @@ def test_create_appointment(client):
     )
     assert response.status_code == 201
     data = response.json()
+
     assert data["caregiver_user_id"] == caregiver_user_id
     assert data["member_user_id"] == member_user_id
     assert data["status"] == AppointmentStatus.PENDING.value
+
     assert "appointment_id" in data
 
 def test_get_appointment(client):
@@ -200,6 +202,7 @@ def test_get_appointments(client):
 
     data = response.json()
     assert isinstance(data, list)
+
     assert len(data) > 0
 
 
@@ -217,7 +220,7 @@ def test_update_appointment(client):
     )
     caregiver_user_id = caregiver_user_response.json()["user_id"]
     
-    photo_file = BytesIO(b"fake photo content")
+    photo_file = BytesIO(b"content")
     client.post(
         "/caregivers/",
         data={

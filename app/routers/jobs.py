@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, Query
 from sqlalchemy.orm import Session
+
 from typing import List, Optional
 from datetime import date
+
 from app.models import Job, Member
 from app.models.enums import CaregivingType
 from app.schemas import JobCreate, JobUpdate, JobResponse
@@ -19,8 +21,8 @@ def create_job(
     job_id: Optional[int] = Form(None),
     db: Session = Depends(get_db)
 ):
-    member = db.query(Member).filter(Member.member_user_id == member_user_id).first()
-    if not member:
+    m = db.query(Member).filter(Member.member_user_id == member_user_id).first()
+    if not m:
         raise HTTPException(status_code=404, detail="Member not found")
     
     if job_id and db.query(Job).filter(Job.job_id == job_id).first():
@@ -29,35 +31,35 @@ def create_job(
     if date_posted is None:
         date_posted = date.today()
     
-    db_job = Job(
+    j = Job(
         job_id=job_id,
         member_user_id=member_user_id,
         required_caregiving_type=required_caregiving_type,
         other_requirements=other_requirements,
         date_posted=date_posted
     )
-    db.add(db_job)
+    db.add(j)
     db.commit()
-    db.refresh(db_job)
-    return db_job
+    db.refresh(j)
+    return j
 #endregion
 
 #region get one
 
 @router.get("/{job_id}", response_model=JobResponse)
 def get_job(job_id: int, db: Session = Depends(get_db)):
-    job = db.query(Job).filter(Job.job_id == job_id).first()
-    if not job:
+    j = db.query(Job).filter(Job.job_id == job_id).first()
+    if not j:
         raise HTTPException(status_code=404, detail="Job not found")
-    return job
+    return j
 #endregion
 
 #region get all
 
 @router.get("/", response_model=List[JobResponse])
 def get_jobs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    jobs = db.query(Job).offset(skip).limit(limit).all()
-    return jobs
+    j = db.query(Job).offset(skip).limit(limit).all()
+    return j
 #endregion
 
 #region update
@@ -71,38 +73,38 @@ def update_job(
     db: Session = Depends(get_db)
 ):
     #region validate request 
-    db_job = db.query(Job).filter(Job.job_id == job_id).first()
-    if not db_job:
+    j = db.query(Job).filter(Job.job_id == job_id).first()
+    if not j:
         raise HTTPException(status_code=404, detail="Job not found")
     
-    if member_user_id is not None and member_user_id != db_job.member_user_id:
-        member = db.query(Member).filter(Member.member_user_id == member_user_id).first()
-        if not member:
+    if member_user_id is not None and member_user_id != j.member_user_id:
+        m = db.query(Member).filter(Member.member_user_id == member_user_id).first()
+        if not m:
             raise HTTPException(status_code=404, detail="Member not found")
-        db_job.member_user_id = member_user_id
+        j.member_user_id = member_user_id
     
     if required_caregiving_type is not None:
-        db_job.required_caregiving_type = required_caregiving_type
+        j.required_caregiving_type = required_caregiving_type
     if other_requirements is not None:
-        db_job.other_requirements = other_requirements
+        j.other_requirements = other_requirements
     if date_posted is not None:
-        db_job.date_posted = date_posted
+        j.date_posted = date_posted
     #endregion validate request 
 
     db.commit()
-    db.refresh(db_job)
-    return db_job
+    db.refresh(j)
+    return j
 #endregion
 #region delete
 
 @router.delete("/{job_id}", status_code=204)
 def delete_job(job_id: int, db: Session = Depends(get_db)):
-    db_job = db.query(Job).filter(Job.job_id == job_id).first()
+    j = db.query(Job).filter(Job.job_id == job_id).first()
 
-    if not db_job:
+    if not j:
         raise HTTPException(status_code=404, detail="Job not found")
     
-    db.delete(db_job)
+    db.delete(j)
     db.commit()
     return None
 #endregion

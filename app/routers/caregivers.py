@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+
 from typing import List, Optional
+import os
+import uuid
+from pathlib import Path
+
 from app.models import Caregiver, User
 from app.models.enums import CaregivingType, Gender
 from app.schemas import CaregiverCreate, CaregiverUpdate, CaregiverResponse
 from app.database import get_db, STATIC_FOLDER
-import os
-import uuid
-from pathlib import Path
+
 
 router = APIRouter(prefix="/caregivers", tags=["caregivers"])
 
@@ -27,8 +30,8 @@ async def create_caregiver(
     photo: UploadFile = File(..., description="Photo file"),
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.user_id == caregiver_user_id).first()
-    if not user:
+    u = db.query(User).filter(User.user_id == caregiver_user_id).first()
+    if not u:
         raise HTTPException(status_code=404, detail="User not found")
     
     if db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first():
@@ -42,33 +45,33 @@ async def create_caregiver(
         content = await photo.read()
         buffer.write(content)
     
-    db_caregiver = Caregiver(
+    c = Caregiver(
         caregiver_user_id=caregiver_user_id,
         photo=photo_filename,
         gender=gender,
         caregiving_type=caregiving_type,
         hourly_rate=hourly_rate
     )
-    db.add(db_caregiver)
+    db.add(c)
     db.commit()
-    db.refresh(db_caregiver)
-    return db_caregiver
+    db.refresh(c)
+    return c
 #endregion
 
 #region get all
 @router.get("/", response_model=List[CaregiverResponse])
 def get_caregivers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    caregivers = db.query(Caregiver).offset(skip).limit(limit).all()
-    return caregivers
+    c = db.query(Caregiver).offset(skip).limit(limit).all()
+    return c
 #endregion
 
 #region get one
 @router.get("/{caregiver_user_id}", response_model=CaregiverResponse)
 def get_caregiver(caregiver_user_id: int, db: Session = Depends(get_db)):
-    caregiver = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
-    if not caregiver:
+    c = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Caregiver not found")
-    return caregiver
+    return c
 #endregion
 
 #region update
@@ -80,55 +83,53 @@ def update_caregiver(
     hourly_rate: Optional[int] = Query(None),
     db: Session = Depends(get_db)
 ):
-    db_caregiver = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
-    if not db_caregiver:
+    c = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Caregiver not found")
     
     if gender is not None:
-        db_caregiver.gender = gender
+        c.gender = gender
     if caregiving_type is not None:
-        db_caregiver.caregiving_type = caregiving_type
+        c.caregiving_type = caregiving_type
     if hourly_rate is not None:
-        db_caregiver.hourly_rate = hourly_rate
+        c.hourly_rate = hourly_rate
     
     db.commit()
-    db.refresh(db_caregiver)
-    return db_caregiver
+    db.refresh(c)
+    return c
 #endregion
 
 #region delete
 
 @router.delete("/{caregiver_user_id}", status_code=204)
 def delete_caregiver(caregiver_user_id: int, db: Session = Depends(get_db)):
-    db_caregiver = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
-    if not db_caregiver:
+    c = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Caregiver not found")
     
-    if db_caregiver.photo:
-        photo_path = static_path / db_caregiver.photo
+    if c.photo:
+        photo_path = static_path / c.photo
         if photo_path.exists():
             photo_path.unlink()
     
-    db.delete(db_caregiver)
+    db.delete(c)
     db.commit()
     return None
 #endregion
 
-#endregion
-
-#region photo routes
+#region photo methods
 
 #region get photo
 @router.get("/{caregiver_user_id}/photo")
 def get_caregiver_photo(caregiver_user_id: int, db: Session = Depends(get_db)):
-    caregiver = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
-    if not caregiver:
+    c = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Caregiver not found")
     
-    if not caregiver.photo:
+    if not c.photo:
         raise HTTPException(status_code=404, detail="Photo not found")
     
-    photo_path = static_path / caregiver.photo
+    photo_path = static_path / c.photo
     if not photo_path.exists():
         raise HTTPException(status_code=404, detail="Photo file not found")
     
@@ -142,13 +143,13 @@ async def update_caregiver_photo(
     photo: UploadFile = File(..., description="Photo file"),
     db: Session = Depends(get_db)
 ):
-    db_caregiver = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
-    if not db_caregiver:
+    c = db.query(Caregiver).filter(Caregiver.caregiver_user_id == caregiver_user_id).first()
+    if not c:
         raise HTTPException(status_code=404, detail="Caregiver not found")
     
     #delete old photo 
-    if db_caregiver.photo:
-        old_photo_path = static_path / db_caregiver.photo
+    if c.photo:
+        old_photo_path = static_path / c.photo
         if old_photo_path.exists():
             old_photo_path.unlink()
     
@@ -161,10 +162,10 @@ async def update_caregiver_photo(
         content = await photo.read()
         buffer.write(content)
     
-    db_caregiver.photo = photo_filename
+    c.photo = photo_filename
     db.commit()
-    db.refresh(db_caregiver)
-    return db_caregiver
+    db.refresh(c)
+    return c
 #endregion  
 
-#endregion
+#endregion 

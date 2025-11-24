@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+
 from app.models.enums import CaregivingType, Gender
 
 class CaregiverBase(BaseModel):
