@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS JOB CASCADE;
 DROP TABLE IF EXISTS ADDRESS CASCADE;
 DROP TABLE IF EXISTS MEMBER CASCADE;
 DROP TABLE IF EXISTS CAREGIVER CASCADE;
-DROP TABLE IF EXISTS account CASCADE;
+DROP TABLE IF EXISTS "USER" CASCADE;
 
 DROP TYPE IF EXISTS gender_enum CASCADE;
 DROP TYPE IF EXISTS caregiving_type_enum CASCADE;
@@ -14,7 +14,7 @@ CREATE TYPE gender_enum AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE caregiving_type_enum AS ENUM ('BABYSITTER', 'ELDERLY_CARE', 'PLAYMATE_FOR_CHILDREN');
 CREATE TYPE appointment_status_enum AS ENUM ('PENDING', 'ACCEPTED', 'DECLINED');
 
-CREATE TABLE account (
+CREATE TABLE "USER" (
     user_id INTEGER PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     given_name TEXT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE CAREGIVER (
-    caregiver_user_id INTEGER PRIMARY KEY REFERENCES account(user_id) ON DELETE CASCADE,
+    caregiver_user_id INTEGER PRIMARY KEY REFERENCES "USER"(user_id) ON DELETE CASCADE,
     photo TEXT NOT NULL,
     gender gender_enum NOT NULL,
     caregiving_type caregiving_type_enum NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE CAREGIVER (
 );
 
 CREATE TABLE MEMBER (
-    member_user_id INTEGER PRIMARY KEY REFERENCES account(user_id) ON DELETE CASCADE,
+    member_user_id INTEGER PRIMARY KEY REFERENCES "USER"(user_id) ON DELETE CASCADE,
     house_rules TEXT,
     dependent_description TEXT
 );
@@ -72,7 +72,7 @@ CREATE TABLE APPOINTMENT (
 );
 
 
-INSERT INTO account (user_id, email, given_name, surname, city, phone_number, profile_description, password) VALUES
+INSERT INTO "USER" (user_id, email, given_name, surname, city, phone_number, profile_description, password) VALUES
 (1, 'anuar.akimbekov@gmail.com', 'Anuar', 'Akimbekov', 'Astana', '+77071111111', 'Experienced caregiver with 5 years in elderly care', 'password123'),
 (2, 'pavel.kokoshko@nu.edu.kz', 'Pavel', 'Kokoshko', 'Almaty', '+77072222222', 'Professional babysitter, certified in child care', 'password123'),
 (3, 'anna.kazakhstan@gmail.com', 'Anna', 'Kazakhstan', 'Astana', '+77073333333', 'Creative playmate, loves arts and crafts', 'password123'),
@@ -99,11 +99,11 @@ INSERT INTO account (user_id, email, given_name, surname, city, phone_number, pr
 INSERT INTO CAREGIVER (caregiver_user_id, photo, gender, caregiving_type, hourly_rate) VALUES
 (1, 'photo1.jpg', 'MALE', 'ELDERLY_CARE', 1500),
 (2, 'photo2.jpg', 'MALE', 'BABYSITTER', 1200),
-(3, 'photo3.jpg', 'FEMALE', 'PLAYMATE_FOR_CHILDREN', 1000),
+(3, 'photo3.jpg', 'FEMALE', 'PLAYMATE_FOR_CHILDREN', 900),
 (4, 'photo4.jpg', 'MALE', 'ELDERLY_CARE', 1800),
 (5, 'photo5.jpg', 'MALE', 'BABYSITTER', 1100),
-(6, 'photo6.jpg', 'FEMALE', 'ELDERLY_CARE', 1600),
-(7, 'photo7.jpg', 'FEMALE', 'ELDERLY_CARE', 2000),
+(6, 'photo6.jpg', 'FEMALE', 'ELDERLY_CARE', 890),
+(7, 'photo7.jpg', 'FEMALE', 'ELDERLY_CARE', 960),
 (8, 'photo8.jpg', 'FEMALE', 'ELDERLY_CARE', 1700),
 (9, 'photo9.jpg', 'FEMALE', 'ELDERLY_CARE', 2100),
 (10, 'photo10.jpg', 'FEMALE', 'ELDERLY_CARE', 2200),
