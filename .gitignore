@@ -20,7 +20,6 @@ wheels/
 *.egg
 venv/
 ENV/
-env/
 .venv
 .pytest_cache/
 .coverage
@@ -30,7 +29,6 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.log
-.env
 .venv
 .vscode/
 .idea/
